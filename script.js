@@ -128,9 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // falling back to the placeholder image.
     products.forEach(p => {
         const folder = getFolderFromCat(p.cat);
+    
         p.imageCandidates = [
             `Img/${folder}/${p.id}.JPG`,
-            `Img2/${folder}/${p.id}.JPG`
+            `Img/${folder}/${p.id}.jpg`, 
+            `Img2/${folder}/${p.id}.JPG`,
+            `Img2/${folder}/${p.id}.jpg`
         ];
     });
 
@@ -376,4 +379,5 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     updateCart();
 
 });
+
 
