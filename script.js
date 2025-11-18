@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     products.forEach(p => {
         const folder = getFolderFromCat(p.cat);
         p.imageCandidates = [
-            `Img/${folder}/${p.id}.jpg`,
-            `Img2/${folder}/${p.id}.jpg`
+            `Img/${folder}/${p.id}.JPG`,
+            `Img2/${folder}/${p.id}.JPG`
         ];
     });
 
@@ -376,3 +376,4 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     updateCart();
 
 });
+
