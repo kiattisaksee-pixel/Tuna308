@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const folder = getFolderFromCat(p.cat);
         p.imageCandidates = [
             `Img/${folder}/${p.id}.jpg`,
-            `img2/${folder}/${p.id}.jpg`
+            `Img2/${folder}/${p.id}.jpg`
         ];
     });
 
@@ -374,4 +374,5 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     displayProducts();
     showSlide();
     updateCart();
+
 });
