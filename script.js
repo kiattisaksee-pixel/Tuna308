@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // ==================== 1. รูปภาพหาย → placeholder ====================
     document.querySelectorAll('img').forEach(img => {
         img.onerror = function() {
             this.src = 'https://via.placeholder.com/300x300/cccccc/666666?text=ไม่มีรูป';
         };
     });
 
-    // ==================== 2. สินค้า ====================
+    //  ====================  สินค้า ====================
     const products = [
         {id: 1, cat: 'อาหาร', name: 'ราเม็งกึ่งสำเร็จรูปฮอกไกโด', price: 599},
         {id: 2, cat: 'อาหาร', name: 'แกงกะหรี่กึ่งสำเร็จรูปสไตล์ซัปโปโร', price: 599},
@@ -117,19 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const map = {
             'อาหาร': '1Food', 'ขนม': '2Sweet', 'ของใช้เครื่องครัว': '3Kitchen utensils',
             'Skincare': '4Body and skin care', 'ของใช้ทั่วไป': '5Daily necessities',
-            'เสื้อผ้า': '6clothing', 'เครื่องปรุง': '7seasoning', 'งานฝีมือ': '8Handmade',
+            'เสื้อผ้า': '6Clothing', 'เครื่องปรุง': '7Seasoning', 'งานฝีมือ': '8Handmade',
             'ของจิปาถะ': '9Miscellaneous', 'เครื่องดื่ม': '10Drink'
         };
-        return map[cat] || '9Miscellaneous';
+        return map[cat] || '1Food';
     }
 
-    // Prepare an array of image candidate paths for each product.
-    // This lets the app try multiple folders (common variants: `Img`, `Img 2`, `img2`) before
-    // falling back to the placeholder image.
     products.forEach(p => {
         const folder = getFolderFromCat(p.cat);
-    
-        p.imageCandidates = [
+         p.imageCandidates = [
             `Img/${folder}/${p.id}.JPG`,
             `Img/${folder}/${p.id}.jpg`, 
             `Img2/${folder}/${p.id}.JPG`,
@@ -155,15 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'product';
 
-            // Image element with progressive fallback through imageCandidates
             const imgEl = document.createElement('img');
             imgEl.alt = product.name;
-            // default to first candidate (if it exists)
             const candidates = product.imageCandidates || [];
             imgEl.dataset.imgIndex = '0';
             imgEl.src = candidates[0] || 'https://via.placeholder.com/300x300/cccccc/666666?text=ไม่มีรูป';
             imgEl.onerror = function() {
-                // Attempt next candidate, otherwise fallback to placeholder
                 let idx = parseInt(this.dataset.imgIndex || '0', 10) + 1;
                 if (candidates[idx]) {
                     this.dataset.imgIndex = String(idx);
@@ -211,13 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     catButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // ลบ class active ออกจากทุกปุ่ม
             catButtons.forEach(b => b.classList.remove('active-cat'));
             
-            // เพิ่ม class active ให้ปุ่มที่กด
             btn.classList.add('active-cat');
 
-            // อัปเดตสินค้า
             currentCat = btn.dataset.cat;
             filteredProducts = currentCat === 'all' ? products : products.filter(p => p.cat === currentCat);
             currentPage = 1;
@@ -225,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-// ตั้งค่าเริ่มต้น: ปุ่ม "ทั้งหมด" เป็น active
 document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
 
     // ==================== ค้นหา ====================
@@ -264,7 +251,6 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
         updateCart();
     };
 
-    // ฟังก์ชันเพิ่ม/ลดจำนวน
     window.increaseQuantity = function(id) {
         const item = cart.find(i => i.id === id);
         if (item) {
@@ -285,7 +271,6 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
         }
     };
 
-    // อัปเดตตะกร้า
     function updateCart() {
         document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.quantity, 0);
         const itemsDiv = document.getElementById('cart-items');
@@ -333,11 +318,101 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
         itemsDiv.appendChild(table);
         document.getElementById('total-price').textContent = total.toLocaleString();
 
-        // ปุ่มชำระเงิน
         const checkoutBtn = document.querySelector('.checkout-btn-official');
         if (checkoutBtn) {
             checkoutBtn.onclick = () => {
-                alert(`ขอบคุณที่ซื้อสินค้า! รวมทั้งสิ้น ${total.toLocaleString()} บาท`);
+                const receiptNo = 'TR' + Math.floor(100000 + Math.random() * 900000);
+                const now = new Date();
+                const dateStr = now.toLocaleString('th-TH');
+
+                let itemsHtml = '';
+                cart.forEach(item => {
+                    itemsHtml += `<tr>
+                        <td style="padding:6px 0">${item.name}</td>
+                        <td style="text-align:center">${item.quantity}</td>
+                        <td style="text-align:right">${(item.price * item.quantity).toLocaleString()} ฿</td>
+                    </tr>`;
+                });
+
+                const subtotal = total;
+                const tax = 0; 
+                const grandTotal = subtotal + tax;
+
+                const receiptHtml = `<!doctype html>
+                <html lang="th">
+                <head>
+                    <meta charset="utf-8">
+                    <title>ใบเสร็จรับเงิน - TunaRoji</title>
+                    <style>
+                        body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px; color:#222}
+                        .receipt{max-width:520px;margin:0 auto;border:1px dashed #444;padding:18px}
+                        .center{text-align:center}
+                        h2{margin:6px 0}
+                        table{width:100%;border-collapse:collapse;margin-top:10px}
+                        td,th{font-size:13px}
+                        .right{text-align:right}
+                        .muted{color:#666;font-size:12px}
+                        .total{font-weight:700;font-size:16px}
+                        .print-btn{display:inline-block;margin-top:12px;padding:8px 14px;background:#27ae60;color:#fff;border-radius:6px;text-decoration:none}
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt">
+                        <div class="center">
+                            <h2>TunaRoji</h2>
+                            <div class="muted">กรุณานำใบนี้ไปยื่นที่ในฝัน</div>
+                        </div>
+                        <hr>
+                        <div>
+                            <div>ใบเสร็จ: <strong>${receiptNo}</strong></div>
+                            <div>วันที่: <strong>${dateStr}</strong></div>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left">สินค้า</th>
+                                    <th style="width:60px;text-align:center">จำนวน</th>
+                                    <th style="width:120px;text-align:right">ราคา</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${itemsHtml}
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <div style="display:flex;justify-content:space-between;margin-top:8px">
+                            <div class="muted">รวม</div>
+                            <div class="total">${subtotal.toLocaleString()} ฿</div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-top:4px">
+                            <div class="muted">ค่าภาษี</div>
+                            <div class="muted">${tax.toLocaleString ? tax.toLocaleString() : tax} ฿</div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-top:8px;border-top:1px solid #ddd;padding-top:8px">
+                            <div class="total">รวมทั้งสิ้น</div>
+                            <div class="total">${grandTotal.toLocaleString()} ฿</div>
+                        </div>
+
+                        <div class="center" style="margin-top:14px">
+                            <div class="muted">วิธีชำระเงิน: เงินสด</div>
+                            <div style="margin-top:10px">ขอบคุณที่อุดหนุน TunaRoji!</div>
+                            <a class="print-btn" href="#" onclick="window.print();return false;">พิมพ์/บันทึกเป็น PDF</a>
+                        </div>
+                    </div>
+                </body>
+                </html>`;
+
+                const w = window.open('', '_blank', 'width=600,height=800');
+                if (w) {
+                    w.document.open();
+                    w.document.write(receiptHtml);
+                    w.document.close();
+                } else {
+                    alert('ไม่สามารถเปิดหน้าต่างใหม่ได้ โปรดอนุญาตป็อปอัพสำหรับหน้าเว็บนี้');
+                }
+
                 cart = [];
                 updateCart();
                 document.getElementById('cart-modal').style.display = 'none';
@@ -349,7 +424,6 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     const aboutModal = document.getElementById('about-modal');
     const cartModal = document.getElementById('cart-modal');
 
-    // เปิด "เกี่ยวกับเรา" (ทั้งจากเมนูและ footer)
     document.getElementById('about-trigger')?.addEventListener('click', e => {
         e.preventDefault();
         aboutModal.style.display = 'block';
@@ -377,8 +451,4 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     displayProducts();
     showSlide();
     updateCart();
-
 });
-
-
-
