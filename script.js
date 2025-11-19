@@ -453,3 +453,4 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     showSlide();
     updateCart();
 });
+
