@@ -115,10 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const map = {
             'อาหาร': '1Food', 'ขนม': '2Sweet', 'ของใช้เครื่องครัว': '3Kitchen utensils',
             'Skincare': '4Body and skin care', 'ของใช้ทั่วไป': '5Daily necessities',
-            'เสื้อผ้า': '6Clothing', 'เครื่องปรุง': '7Seasoning', 'งานฝีมือ': '8Handmade',
+            'เสื้อผ้า': '6clothing', 'เครื่องปรุง': '7seasoning', 'งานฝีมือ': '8Handmade',
             'ของจิปาถะ': '9Miscellaneous', 'เครื่องดื่ม': '10Drink'
         };
-        return map[cat] || '1Food';
+        return map[cat] || '9Miscellaneous';
     }
 
     products.forEach(p => {
@@ -452,3 +452,4 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     showSlide();
     updateCart();
 });
+
