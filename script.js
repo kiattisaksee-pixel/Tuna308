@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'เสื้อผ้า': '6clothing', 'เครื่องปรุง': '7seasoning', 'งานฝีมือ': '8Handmade',
             'ของจิปาถะ': '9Miscellaneous', 'เครื่องดื่ม': '10Drink'
         };
-        return map[cat] || '9Miscellaneous';
+        return map[cat] || '1Food';
     }
 
     products.forEach(p => {
@@ -318,6 +318,7 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
         itemsDiv.appendChild(table);
         document.getElementById('total-price').textContent = total.toLocaleString();
 
+        // ======================== ใบเส็จรับเงิน   =========================
         const checkoutBtn = document.querySelector('.checkout-btn-official');
         if (checkoutBtn) {
             checkoutBtn.onclick = () => {
@@ -452,4 +453,3 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     showSlide();
     updateCart();
 });
-
